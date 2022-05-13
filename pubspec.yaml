@@ -1,6 +1,6 @@
 name: atmospeed
 description: Calculate standard and non-standard atmosphere properties and speed conversions. Uses 1976 US Standard Atmosphere definitions.
-version: 1.0.0
+version: 1.0.1
 repository: https://github.com/aeroperf/atmospeed
 issue_tracker: https://github.com/aeroperf/atmospeed/issues
 

@@ -28,10 +28,7 @@ class Speed {
   /// Speed class methods, the output speed unit (if not a Mach output) is the
   /// same unit at the input speed is defined in. If a Mach input is set and
   /// no [unitSpeed] is defined, output speeds are in knots.
-  Speed(
-      {required this.value,
-      required this.type,
-      this.unitSpeed = SpeedUnit.kts}) {
+  Speed({required this.value, required this.type, this.unitSpeed = SpeedUnit.kts}) {
     // Ensure speed input is in knots, as knots is the internally used unit
     _speedInKnots = _convertSpeedToKnots(value, unitSpeed);
   }
@@ -46,15 +43,12 @@ class Speed {
     double resultInKnots;
     switch (type) {
       case SpeedType.cas:
-        resultInKnots = value;
-        break;
+        return value;
       case SpeedType.eas:
-        resultInKnots =
-            speedKEASToKCAS(_speedInKnots, atAtmoPoint.getHpInFeet());
+        resultInKnots = speedKEASToKCAS(_speedInKnots, atAtmoPoint.getHpInFeet());
         break;
       case SpeedType.tas:
-        resultInKnots = speedKTASToKCAS(_speedInKnots,
-            atAtmoPoint.getHpInFeet(), _getDeltaISAInCelsius(atAtmoPoint));
+        resultInKnots = speedKTASToKCAS(_speedInKnots, atAtmoPoint.getHpInFeet(), _getDeltaISAInCelsius(atAtmoPoint));
         break;
       case SpeedType.mach:
         resultInKnots = speedMachToKCAS(value, atAtmoPoint.getHpInFeet());
@@ -72,15 +66,12 @@ class Speed {
     double resultInKnots;
     switch (type) {
       case SpeedType.cas:
-        resultInKnots =
-            speedKCASToKEAS(_speedInKnots, atAtmoPoint.getHpInFeet());
+        resultInKnots = speedKCASToKEAS(_speedInKnots, atAtmoPoint.getHpInFeet());
         break;
       case SpeedType.eas:
-        resultInKnots = value;
-        break;
+        return value;
       case SpeedType.tas:
-        resultInKnots = speedKTASToKEAS(_speedInKnots,
-            atAtmoPoint.getHpInFeet(), _getDeltaISAInCelsius(atAtmoPoint));
+        resultInKnots = speedKTASToKEAS(_speedInKnots, atAtmoPoint.getHpInFeet(), _getDeltaISAInCelsius(atAtmoPoint));
         break;
       case SpeedType.mach:
         resultInKnots = speedMachToKEAS(value, atAtmoPoint.getHpInFeet());
@@ -97,19 +88,15 @@ class Speed {
     double resultInKnots;
     switch (type) {
       case SpeedType.cas:
-        resultInKnots = speedKCASToKTAS(_speedInKnots,
-            atAtmoPoint.getHpInFeet(), _getDeltaISAInCelsius(atAtmoPoint));
+        resultInKnots = speedKCASToKTAS(_speedInKnots, atAtmoPoint.getHpInFeet(), _getDeltaISAInCelsius(atAtmoPoint));
         break;
       case SpeedType.eas:
-        resultInKnots = speedKEASToKTAS(_speedInKnots,
-            atAtmoPoint.getHpInFeet(), _getDeltaISAInCelsius(atAtmoPoint));
+        resultInKnots = speedKEASToKTAS(_speedInKnots, atAtmoPoint.getHpInFeet(), _getDeltaISAInCelsius(atAtmoPoint));
         break;
       case SpeedType.tas:
-        resultInKnots = value;
-        break;
+        return value;
       case SpeedType.mach:
-        resultInKnots = speedMachToKTAS(value, atAtmoPoint.getHpInFeet(),
-            _getDeltaISAInCelsius(atAtmoPoint));
+        resultInKnots = speedMachToKTAS(value, atAtmoPoint.getHpInFeet(), _getDeltaISAInCelsius(atAtmoPoint));
         break;
     }
 
@@ -125,8 +112,7 @@ class Speed {
       case SpeedType.eas:
         return speedKEASToMach(_speedInKnots, atAtmoPoint.getHpInFeet());
       case SpeedType.tas:
-        return speedKTASToMach(_speedInKnots, atAtmoPoint.getHpInFeet(),
-            _getDeltaISAInCelsius(atAtmoPoint));
+        return speedKTASToMach(_speedInKnots, atAtmoPoint.getHpInFeet(), _getDeltaISAInCelsius(atAtmoPoint));
       case SpeedType.mach:
         return value;
     }
@@ -137,16 +123,14 @@ class Speed {
   /// Example takes CAS from 148.7 knots to ft/sec:
   /// Speed(value: 148.7, type: SpeedType.cas).convertSpeed(SpeedUnit.fps);
   double convertSpeed(SpeedUnit fromUnit, SpeedUnit toUnit) =>
-      _convertSpeedResultToInputUnit(
-          _convertSpeedToKnots(value, fromUnit), toUnit);
+      _convertSpeedResultToInputUnit(_convertSpeedToKnots(value, fromUnit), toUnit);
 }
 
 /// Extension method to directly convert a double speed value from one
 /// unit to another unit
 extension ConvertSpeed on double {
   double convertSpeed(SpeedUnit fromUnit, SpeedUnit toUnit) =>
-      _convertSpeedResultToInputUnit(
-          _convertSpeedToKnots(this, fromUnit), toUnit);
+      _convertSpeedResultToInputUnit(_convertSpeedToKnots(this, fromUnit), toUnit);
 }
 
 // Convert input speed from whatever unit input to knots
@@ -166,8 +150,7 @@ double _convertSpeedToKnots(double value, SpeedUnit unitSpeed) {
 }
 
 // Convert result speed from knots to input speed unit used
-double _convertSpeedResultToInputUnit(
-    double speedInKnots, SpeedUnit inputSpeedUnit) {
+double _convertSpeedResultToInputUnit(double speedInKnots, SpeedUnit inputSpeedUnit) {
   // Return output speed in same unit as input speed was provided
   switch (inputSpeedUnit) {
     case SpeedUnit.kts:
@@ -188,7 +171,6 @@ double _convertSpeedResultToInputUnit(
 // Private method to get delta ISA in Celsius, regardless of delta ISA unit
 // provided.
 double _getDeltaISAInCelsius(Atmo atmoPoint) =>
-    (atmoPoint.unitTemperature == TemperatureUnit.C) ||
-            (atmoPoint.unitTemperature == TemperatureUnit.K)
+    (atmoPoint.unitTemperature == TemperatureUnit.C) || (atmoPoint.unitTemperature == TemperatureUnit.K)
         ? atmoPoint.getDeltaISA()
         : atmoPoint.getDeltaISA() / 1.8;
